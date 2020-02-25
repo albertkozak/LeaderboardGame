@@ -45,7 +45,6 @@ class AuthActivity: AppCompatActivity() {
                                 val user = auth.currentUser
                                 startActivity(Intent(this, GameActivity::class.java))
                             }
-
                             // Handle error here
                         }
                 }
