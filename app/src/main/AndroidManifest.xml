@@ -17,7 +17,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".AuthActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".GameActivity"
             android:windowSoftInputMode="adjustResize" />
     </application>
 
