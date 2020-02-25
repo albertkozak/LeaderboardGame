@@ -39,23 +39,23 @@ class GameActivity: AppCompatActivity() {
             monster_body_image_view.getTag().toString() == R.drawable.monster1_body.toString() &&
             monster_feet_image_view.getTag().toString() == R.drawable.monster1_feet.toString())
         {
-            game_text.setText(monsters[0].name)
-            score += 1000
+            game_text.setText("You matched " + monsters[0].name + "! +1500pts")
+            score += 1500
             score_text.setText(score.toString())
         }
         else if(monster_head_image_view.getTag().toString() == R.drawable.monster2_head.toString() &&
             monster_body_image_view.getTag().toString() == R.drawable.monster2_body.toString() &&
             monster_feet_image_view.getTag().toString() == R.drawable.monster2_feet.toString())
         {
-            game_text.setText(monsters[1].name)
-            score += 1000
+            game_text.setText("You matched " + monsters[1].name + "! +1250pts")
+            score += 1250
             score_text.setText(score.toString())
         }
         else if(monster_head_image_view.getTag().toString() == R.drawable.monster3_head.toString() &&
             monster_body_image_view.getTag().toString() == R.drawable.monster3_body.toString() &&
             monster_feet_image_view.getTag().toString() == R.drawable.monster3_feet.toString())
         {
-            game_text.setText(monsters[2].name)
+            game_text.setText("You matched " + monsters[2].name + "! +1000pts")
             score += 1000
             score_text.setText(score.toString())
         }
