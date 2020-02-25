@@ -31,7 +31,7 @@ class AuthActivity: AppCompatActivity() {
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
                                 val user = auth.currentUser
-                                startActivity(Intent(this, GameActivity::class.java))
+                                startActivity(Intent(this, LeaderboardActivity::class.java))
                             }
 
                             // Handle error here
@@ -43,7 +43,7 @@ class AuthActivity: AppCompatActivity() {
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
                                 val user = auth.currentUser
-                                startActivity(Intent(this, GameActivity::class.java))
+                                startActivity(Intent(this, LeaderboardActivity::class.java))
                             }
                             // Handle error here
                         }
