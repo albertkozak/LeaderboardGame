@@ -1,10 +1,16 @@
 package com.albertkozak.leaderboardgame
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_auth.view.*
 import kotlinx.android.synthetic.main.activity_game.*
 
 class GameActivity: AppCompatActivity() {
+    private lateinit var scoreDB: DatabaseReference
     private val monsters: List<Monster> = listOf(
         Monster("Bobo", R.drawable.monster1_head, R.drawable.monster1_body, R.drawable.monster1_feet),
         Monster("BingBing", R.drawable.monster2_head, R.drawable.monster2_body, R.drawable.monster2_feet),
@@ -17,11 +23,30 @@ class GameActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        scoreDB = FirebaseDatabase.getInstance().getReference("userScore")
+
         shuffleMonsters()
 
         match_button.setOnClickListener {
             shuffleMonsters()
         }
+        submit_button.setOnClickListener {
+            val user = FirebaseAuth.getInstance().currentUser?.email
+            val userScore = score.toString()
+
+            if (user != null && userScore != "0") {
+                saveUserScore(user, userScore)
+            }
+            startActivity(Intent(this, LeaderboardActivity::class.java))
+        }
+    }
+
+    private fun saveUserScore(user: String, userScore: String) {
+        val key = scoreDB.push().key
+        key ?: return
+
+        val userScore = UserScore(user, userScore)
+        scoreDB.child(key).setValue(userScore)
     }
 
     private fun shuffleMonsters(){
@@ -64,3 +89,13 @@ class GameActivity: AppCompatActivity() {
 }
 
 data class Monster(val name: String, val head: Int, val body: Int, val feet:Int)
+data class UserScore(
+    var user: String = "",
+    var userScore: String = ""
+) : Comparable<UserScore> {
+    override fun compareTo(other:UserScore): Int {
+        if (this.userScore != other.userScore) {
+            return this.userScore.toInt() - other.userScore.toInt()
+        } else return 0
+    }
+}

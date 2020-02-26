@@ -8,6 +8,5 @@
     <string name="match">Match</string>
     <string name="match_monsters_button_text">Match Monsters</string>
     <string name="score">0</string>
-
-
+    <string name="submit_button_text">Submit Score</string>
 </resources>

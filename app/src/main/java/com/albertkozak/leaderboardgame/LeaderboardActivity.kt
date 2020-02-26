@@ -3,6 +3,7 @@ package com.albertkozak.leaderboardgame
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.SyncStateContract.Helpers.update
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,16 +12,37 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.albertkozak.leaderboardgame.AuthActivity.Companion.AuthModeExtraName
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_leaderboard.*
 import kotlinx.android.synthetic.main.item_score.view.*
 
 data class Score(val name: String, val score: Int)
 
 class LeaderboardActivity: AppCompatActivity() {
+    private lateinit var scoreDB: DatabaseReference
+
+    var scores: MutableList<UserScore> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_leaderboard)
+        scoreDB = FirebaseDatabase.getInstance().getReference("userScore")
+        scoreDB.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                scores = mutableListOf()
+                dataSnapshot.children.forEach {
+                    val score = it.getValue(UserScore::class.java)
+                    if(score != null) {
+                        scores.add(score)
+                    }
+                }
+                update()
+                scores.sortDescending()
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+        leaderboard_list.layoutManager = LinearLayoutManager(this)
 
         play_button.setOnClickListener {
             val user = FirebaseAuth.getInstance().currentUser?.email
@@ -30,32 +52,14 @@ class LeaderboardActivity: AppCompatActivity() {
                 startActivity(Intent(this, AuthActivity::class.java))
             }
         }
+    }
 
-        leaderboard_list.layoutManager = LinearLayoutManager(this)
-
-        val scores = listOf(
-            Score("1. Albert Kozak",  25000),
-            Score("2. Ashley Stathis",  22000),
-            Score("3. Kasra Niktash",  10000),
-            Score("4. Athena Kozak",  24000),
-            Score("5. Tristan Peterson",  8000),
-            Score("6. Eduardo Fehr",  11000),
-            Score("7. Richard Lee",  5000),
-            Score("8. Harman Deol",  18000),
-            Score("9. Christian Fletcher",  21000),
-            Score("10. Franco Pontaletta",  19000),
-            Score("11. Cameron Jones",  14000),
-            Score("12. Elizabeth Stathis",  15000),
-            Score("13. Stan Stathis",  8000),
-            Score("14. Kate Draken",  16000),
-            Score("15. Max Draken",  15000),
-            Score("16. Edmund Mu",  19000)
-        )
+    private fun update(){
         leaderboard_list.adapter = LeaderboardAdapter(scores, this)
     }
 }
 
-private class LeaderboardAdapter(val scores: List<Score>, val context: Context): RecyclerView.Adapter<LeaderboardViewHolder>() {
+private class LeaderboardAdapter(val scores: MutableList<UserScore>, val context: Context): RecyclerView.Adapter<LeaderboardViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LeaderboardViewHolder {
         return LeaderboardViewHolder(LayoutInflater.from(context).inflate(R.layout.item_score, parent, false))
     }
@@ -67,8 +71,8 @@ private class LeaderboardAdapter(val scores: List<Score>, val context: Context):
     override fun onBindViewHolder(holder: LeaderboardViewHolder, position: Int) {
         val score = scores[position]
 
-        holder.itemView.item_name.text = score.name
-        holder.itemView.item_score.text = score.score.toString()
+        holder.itemView.item_name.text = score.user
+        holder.itemView.item_score.text = score.userScore
 
     }
 }

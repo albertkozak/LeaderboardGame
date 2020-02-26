@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:text="@string/score"
-        android:textColor="#F44336"
+        android:textColor="@color/colorAccent"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/match_button"
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:text="@string/match"
-        android:textColor="#F44336"
+        android:textColor="@color/colorAccent"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/score_text"
@@ -68,7 +68,18 @@
         android:layout_height="wrap_content"
         android:text="@string/match_monsters_button_text"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/submit_button"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0000FF88"
+        android:text="@string/submit_button_text"
+        android:textColor="#ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
